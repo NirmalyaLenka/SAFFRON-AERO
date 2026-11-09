@@ -1,0 +1,27 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# PlatformIO build output
+.pio/
+
+# Runtime logs and locally collected observations
+data/telemetry.csv
+data/experiment_log.csv
+data/events.csv
+*.log
+
+# Local secrets/config overrides
+.env
+.env.*
+!*.example
+config.local.h
+
+# Operating system/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
