@@ -1,0 +1,14 @@
+function,proposed_gpio,configured_gpio,direction,default_state,verification,status
+DS18B20 primary data,4,4,input/output bus,n/a,Check 1-Wire pull-up and physical probe location,Proposed
+DHT22 data,16,16,input,n/a,Confirm wiring/sensor board and condensation protection,Proposed
+Peltier driver enable 1,25,-1,output,not configured,Confirm rated driver/polarity/topology/current before assigning GPIO25,Disabled in stock build
+Peltier driver enable 2,26,-1,output,not configured,Confirm shared vs independent driver topology before assigning GPIO26,Disabled in stock build
+Misting driver enable,27,-1,output,not configured,Confirm rated driver/load role/reservoir interlock before assigning GPIO27,Disabled in stock build
+OLED SDA,21,21,I2C,n/a,Confirm board pinout/address/voltage,Proposed
+OLED SCL,22,22,I2C,n/a,Confirm board pinout/address/voltage,Proposed
+Coolant pump enable,-1,-1,output,OFF,Assign only after pump/driver/current verification,Disabled
+Hot-side fan enable,-1,-1,output,OFF,Assign only after fan/driver/current verification,Disabled
+Coolant flow switch,-1,-1,input,not available,Input expected active HIGH while flow is proven,Disabled
+Reservoir level switch,-1,-1,input,not available,Input expected active HIGH while level is safe,Disabled
+Hot-side DS18B20 index,-1,-1,1-Wire sensor index,not available,Map ROM address and physical location; must differ from index zero,Disabled
+Light sensor,-1,-1,input,not installed,Select/calibrate sensor and document unit/range,Disabled

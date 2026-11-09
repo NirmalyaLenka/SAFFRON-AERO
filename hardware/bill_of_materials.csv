@@ -1,0 +1,21 @@
+item,quantity,status,notes
+ESP32 development board,1,known class only,Generic 38-pin board; exact manufacturer/model/variant unverified
+DHT22 / AM2302,1,planned/claimed,Air temperature and relative humidity; confirm actual board and calibration
+DS18B20 probe(s),1+ ,claimed primary plus required hot-side probe,One loop probe on proposed GPIO4; hot-side probe and ROM address not verified
+SSD1306 I2C OLED,1,planned/claimed,Confirm controller/address/voltage
+TEC1-12715 thermoelectric modules,2,claimed,Exact manufacturer/current-temperature curves/condition not documented
+TEC driver / high-current switch,2 signals / physical topology unknown,NOT VERIFIED,Must identify exact topology/current rating before enabling
+Coolant pump 12V,1,claimed,Model/start-stall current/flow curve unknown
+Radiator and hot-side heat sink,1 set,planned/claimed,Capacity and thermal arrangement unverified
+Fans,quantity unknown,planned/claimed,Exact count/current/position unverified
+Ultrasonic mist maker/atomizer,1,claimed,Root-zone role and coverage not demonstrated
+Mist driver/relay/MOSFET,1,NOT VERIFIED,Must suit actual DC load and use suitable protection
+Coolant-flow switch,1,required for TEC release,Not installed/configured in default firmware
+Reservoir-level switch,1,required for mist release,Not installed/configured in default firmware
+EPS/thermocol insulation,about 3cm,claimed,Exact internal/external dimensions and seams unmeasured
+Glass viewing section,1,claimed,Area/thickness/coating/thermal gain unmeasured
+PSU,1,unverified possibility,A described 650W PC PSU does not establish rail/current/connectors/grounding safety
+Fuses / disconnect / rated wires / connectors,as required,required but exact items unknown,Select only after measuring loads and checking datasheets
+Thermal interface material / mounting hardware,as required,required,Confirm contact pressure and safe mechanical support
+Reference thermometer and electrical power meter,1 each for validation,recommended/required for acceptance,Select calibrated/rated instruments
+RTC with backup power,optional,future work,Needed if wall-clock time during a long outage is required
