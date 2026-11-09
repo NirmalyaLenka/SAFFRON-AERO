@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAFFRON-AERO · Local Control Console</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-mode="{{ mode }}">
+<header class="topbar">
+  <div class="brandmark" aria-hidden="true">SA</div>
+  <div class="brand"><div class="eyebrow">OFFLINE-FIRST CONTROL SYSTEM</div><h1>SAFFRON-AERO</h1><p>Phase-aware climate control · experiment console</p></div>
+  <div class="top-status"><span id="connection-dot" class="dot"></span><span id="connection-text">Connecting…</span><span id="source-tag" class="tag">{{ 'SIMULATION' if mode == 'simulation' else 'ESP32 DEVICE MODE' }}</span></div>
+</header>
+<div id="simulation-warning" class="banner warning" {% if mode != 'simulation' %}hidden{% endif %}><strong>SIMULATION ONLY</strong> — values are synthetic UI-test data. No real sensors or outputs are connected. Phase/profile changes affect simulator state only.</div>
+<div id="global-error" class="banner error" hidden></div>
+<main>
+  <section class="hero-grid">
+    <article class="panel status-panel">
+      <div class="panel-head"><div><span class="eyebrow">CONTROLLER STATE</span><h2>Live overview</h2></div><span id="recovery-tag" class="tag">UNKNOWN</span></div>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Air temperature</span><div><span id="air-value" class="value">—</span><span class="unit">°C</span></div><span id="air-valid" class="subtle">Waiting for sensor</span></div>
+        <div class="metric"><span class="label">Relative humidity</span><div><span id="rh-value" class="value">—</span><span class="unit">% RH</span></div><span id="rh-valid" class="subtle">Waiting for sensor</span></div>
+        <div class="metric"><span class="label">Cooling-loop DS18B20</span><div><span id="coolant-value" class="value">—</span><span class="unit">°C</span></div><span id="coolant-valid" class="subtle">Sensor location must be verified</span></div>
+        <div class="metric"><span class="label">Active cultivation phase</span><div id="phase-value" class="phase-value">—</div><span id="mode-value" class="subtle">Mode unknown</span></div>
+      </div>
+      <div class="status-strip"><div><span class="label">Recovery</span><strong id="recovery-value">—</strong></div><div><span class="label">Config persistence</span><strong id="save-value">—</strong></div><div><span class="label">Telemetry</span><strong id="fresh-value">—</strong></div></div>
+    </article>
+    <article class="panel safety-panel">
+      <div class="panel-head"><div><span class="eyebrow">SAFETY FIRST</span><h2>Interlocks & outputs</h2></div><span id="safety-tag" class="tag danger">LOCKED UNTIL VERIFIED</span></div>
+      <p id="lockout-reason" class="lockout">Loading interlock state…</p>
+      <div class="output-list">
+        <div><span><i id="peltier-dot" class="state-dot"></i> Peltier driver command</span><b id="peltier-state">OFF</b></div>
+        <div><span><i id="pump-dot" class="state-dot"></i> Coolant pump command</span><b id="pump-state">OFF</b></div>
+        <div><span><i id="fan-dot" class="state-dot"></i> Hot-side fan command</span><b id="fan-state">OFF</b></div>
+        <div><span><i id="mist-dot" class="state-dot"></i> Misting command</span><b id="mist-state">OFF</b></div>
+      </div>
+      <p class="micro-note">These are firmware-reported GPIO commands, not electrical feedback or proof of flow. An “ON” command is not proof that a load is working.</p>
+      <div class="action-row"><button id="auto-button" class="button primary">Enable automatic mode</button><button id="manual-button" class="button secondary">Manual mode / loads off</button></div>
+      <button id="estop-button" class="button emergency">Latch emergency stop</button>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><span class="eyebrow">LOCAL CONTROL</span><h2>Cultivation phase & profile</h2></div><span class="tag">ESP32 IS THE SOURCE OF TRUTH</span></div>
+    <div class="control-grid">
+      <div class="control-box"><label for="phase-select">Select phase</label><select id="phase-select"></select><p id="phase-evidence" class="help">Profiles are research-informed starting points, not validated instructions for aeroponic saffron.</p><button id="commit-phase" class="button primary">Commit phase to controller</button><button id="commission-button" class="button secondary" hidden>Commission first-time setup</button><p class="micro-note">Commissioning stores initial provisional profiles only. It does not commission the power electronics or unlock physical outputs.</p></div>
+      <div class="control-box"><div class="profile-head"><h3>Profile values</h3><span id="profile-status" class="tag">Load from device</span></div>
+        <div class="form-grid">
+          <label>Air target (°C)<input id="airTargetC" type="number" step="0.1"></label>
+          <label>Air minimum (°C)<input id="airMinC" type="number" step="0.1"></label>
+          <label>Air maximum (°C)<input id="airMaxC" type="number" step="0.1"></label>
+          <label>Air hysteresis (°C)<input id="tempHyst" type="number" step="0.1" min="0.2" max="5"></label>
+          <label>RH target (%)<input id="rhTarget" type="number" step="1"></label>
+          <label>RH minimum (%)<input id="rhMin" type="number" step="1"></label>
+          <label>RH maximum (%)<input id="rhMax" type="number" step="1"></label>
+          <label>RH hysteresis (%)<input id="rhHyst" type="number" step="1" min="1" max="15"></label>
+          <label>Mist pulse (ms)<input id="mistPulseMs" type="number" step="250" min="0" max="8000"></label>
+          <label>Mist rest (ms)<input id="mistRestMs" type="number" step="1000" min="10000"></label>
+        </div>
+        <p class="help">Editing this form does not immediately change the device. Save explicitly and wait for device confirmation. Mist settings control an output only if the hardware is verified.</p>
+        <button id="save-profile" class="button primary">Validate & save profile</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel chart-window-control"><label for="chart-window">Chart window</label><select id="chart-window"><option value="300000">Last 5 minutes</option><option value="1800000">Last 30 minutes</option><option value="3600000">Last hour</option><option value="0">Whole browser session</option></select><span class="micro-note">Session charts reset on page reload. CSV export provides longer logs.</span></section>
+  <section class="chart-grid">
+    <article class="panel chart-panel"><div class="panel-head"><div><span class="eyebrow">RECENT SESSION</span><h2>Air temperature</h2></div><span class="unit">°C</span></div><canvas id="temp-chart" height="180" aria-label="Air temperature chart"></canvas><p class="micro-note">In-browser chart history resets when the page is reloaded. Use CSV export for longer records. Missing data is not interpolated.</p></article>
+    <article class="panel chart-panel"><div class="panel-head"><div><span class="eyebrow">RECENT SESSION</span><h2>Relative humidity</h2></div><span class="unit">% RH</span></div><canvas id="rh-chart" height="180" aria-label="Relative humidity chart"></canvas><p class="micro-note">Simulation data is visibly labelled and must not be used as agricultural evidence.</p></article>
+  </section>
+
+  <section class="panel"><div class="panel-head"><div><span class="eyebrow">RECOVERY DIAGNOSTICS</span><h2>Power-loss recovery trace</h2></div><span id="recovery-complete-tag" class="tag">Not verified</span></div>
+    <div class="recovery-grid"><div><span class="label">Previously saved phase</span><strong id="previous-phase">—</strong></div><div><span class="label">Previous operating mode</span><strong id="previous-mode">—</strong></div><div><span class="label">Current recovery stage</span><strong id="boot-stage">—</strong></div><div><span class="label">Sensor validation</span><strong id="sensor-state">—</strong></div><div><span class="label">Coolant flow feedback</span><strong id="flow-state">—</strong></div><div><span class="label">Reservoir feedback</span><strong id="reservoir-state">—</strong></div><div><span class="label">Automatic mode resumed</span><strong id="auto-resumed">—</strong></div><div><span class="label">Interruption interval</span><strong>Unknown without independent logger</strong></div></div>
+    <p class="micro-note">The ESP32 cannot measure chamber drift while all power is unavailable. Recovery restores saved configuration; it does not preserve temperature during an outage. A result is only shown as complete when firmware reports it.</p>
+  </section>
+
+  <section class="panel"><div class="panel-head"><div><span class="eyebrow">RESEARCH EXPERIMENT</span><h2>Observation log</h2></div><span class="tag">MEASURED VALUES ONLY</span></div>
+    <form id="experiment-form" class="experiment-grid">
+      <label>Batch ID*<input name="batch_id" required placeholder="e.g. KS-2026-A"></label>
+      <label>Corm count<input name="corm_count" type="number" min="0" placeholder="25"></label>
+      <label>Approx. corm mass (g)<input name="approx_mass_g" type="number" min="0" step="0.1" placeholder="Measured average"></label>
+      <label>Flower count<input name="flower_count" type="number" min="0"></label>
+      <label>Harvest mass (g)<input name="harvest_mass_g" type="number" min="0" step="0.001"></label>
+      <label>Daughter-corm count<input name="daughter_corm_count" type="number" min="0"></label>
+      <label class="wide">Observation / anomalies*<textarea name="observation" rows="2" required placeholder="Record what was actually seen, including missing data and failures."></textarea></label>
+      <div class="wide form-actions"><button class="button primary" type="submit">Append observation</button><a class="text-link" href="/api/export/telemetry.csv">Export telemetry CSV</a><a class="text-link" href="/api/export/experiments.csv">Export experiment CSV</a></div>
+    </form>
+    <p id="experiment-result" class="help" role="status"></p>
+  </section>
+  <section class="panel"><div class="panel-head"><div><span class="eyebrow">AUDIT TRAIL</span><h2>Recent controller events</h2></div><a class="text-link" href="/api/export/telemetry.csv">Download data</a></div><div class="table-wrap"><table><thead><tr><th>Boot-relative time</th><th>Event</th><th>Detail</th></tr></thead><tbody id="events-body"><tr><td colspan="3">Waiting for controller…</td></tr></tbody></table></div></section>
+  <footer><p>SAFFRON-AERO is an experimental prototype, not a certified agricultural appliance. The dashboard is optional; the ESP32 is responsible for control. A software interface cannot validate saffron production, driver ratings, electrical safety or growing outcomes.</p><p>Local dashboard: <code>127.0.0.1:5000</code> · Device endpoint: <code>{{ device_url }}</code> · No cloud/CDN dependencies.</p></footer>
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>

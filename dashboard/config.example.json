@@ -1,0 +1,7 @@
+{
+  "mode": "device",
+  "device_base_url": "http://192.168.4.1",
+  "api_key_environment_variable": "SAFFRON_API_KEY",
+  "telemetry_log_interval_seconds": 15,
+  "note": "The dashboard must not push defaults to the ESP32. The device remains authoritative."
+}
