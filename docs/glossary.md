@@ -1,0 +1,23 @@
+# Glossary
+
+- **Aeroponics:** a cultivation approach that supplies a suspended root system with a mist/aerosol rather than a conventional soil bed. Chamber humidification alone is not sufficient evidence of aeroponics.
+- **Ambient temperature:** temperature of the environment outside the growing chamber.
+- **API:** application programming interface used by the dashboard or local fallback UI to request state and send validated commands.
+- **Corm:** underground storage organ used by saffron for survival and vegetative propagation.
+- **CRC-32:** non-cryptographic checksum used to detect accidental corruption in a saved configuration payload.
+- **DHT22 / AM2302:** digital sensor for air temperature and relative humidity.
+- **DS18B20:** digital 1-Wire temperature sensor. The value means the temperature at the installed probe location, not automatically air or corm temperature.
+- **Daughter corm:** new corm produced by a parent corm during the growth cycle.
+- **Floral induction:** physiological process associated with later flower development; not identical to the visible flowering date.
+- **Hysteresis:** gap between activation and deactivation thresholds that reduces rapid switching near a target.
+- **Interlock:** verified condition required before an output can energize.
+- **LittleFS:** flash filesystem used for event-log files; capacity and retention are limited.
+- **NVS:** non-volatile storage used for compact configuration that persists over power cycles.
+- **Peltier / thermoelectric cooler (TEC):** solid-state heat-pumping module that needs a correctly engineered electrical driver and hot-side heat rejection.
+- **Provisional target:** engineering value used for initial software testing but not validated for the crop/system.
+- **Relative humidity (RH):** ratio of water-vapour partial pressure to saturation vapour pressure at the current air temperature, commonly reported as a percent.
+- **Sensor freshness:** how recently the controller received a valid reading.
+- **Simulation:** synthetic software state used to test display and interactions; it is not a measured physical observation.
+- **Source of truth:** system that owns the authoritative current state. Here that is the ESP32 for device configuration and live control status.
+- **State-of-charge / energy:** actual energy requires electrical measurement; a requested cooling command cannot substitute for wattage or kWh.
+- **Wall-clock time:** civil time and date; not guaranteed by a bare ESP32 during a long offline outage without a backup RTC.
