@@ -215,6 +215,52 @@ The code and documentation are released under the MIT License, except for third-
 
 ---
 
+## Skills & technologies
+
+`Arduino/C++` · `C/C++` · `Python` · `JavaScript` · `HTML/CSS`
+
+
+## Repository structure
+
+Key files and folders (not exhaustive):
+
+- `.gitignore`
+- `BUILD_AND_VALIDATION_REPORT.md`
+- `CHANGELOG.md`
+- `CONTRIBUTING.md`
+- `LICENSE`
+- `MANIFEST.csv`
+- `README.md`
+- `assets/README.md`
+- `dashboard/app.py`
+- `dashboard/config.example.json`
+- `dashboard/requirements.txt`
+- `data/README.md`
+- `data/sample_data.csv`
+- `docs/calibration_guide.md`
+- `docs/dashboard_user_guide.md`
+- `docs/electrical_safety.md`
+- `docs/experiment_protocol.md`
+- `docs/firmware_explanation.md`
+- `docs/glossary.md`
+- `docs/hardware_and_wiring.md`
+- `docs/installation_guide.md`
+- `docs/limitations_and_future_work.md`
+- `docs/operating_procedure.md`
+- `docs/problem_solution_report.md`
+- `docs/project_overview.md`
+- `docs/references.bib`
+- `docs/research_and_references.md`
+- `docs/saffron_growth_environment.md`
+- `docs/system_architecture.md`
+- `docs/testing_and_validation.md`
+
+
+## How it works
+
+The main firmware sketch is `firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/SAFFRON_AERO_ESP32_WIFI_OLED_FIX.ino`. Open it in Arduino IDE, verify the board, pin mapping and library requirements, then compile and upload. Test hardware behaviour on the real circuit before relying on it.
+
+
 ## Maintenance & Audit
 
 - **Audit date:** 10 November 2026
