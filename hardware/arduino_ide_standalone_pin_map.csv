@@ -1,0 +1,9 @@
+function,configured_gpio,direction,role,notes
+DHT22 chamber air temperature and RH,16,input,primary chamber air sensor,"Used for chamber air temperature and RH; place in representative chamber air away from direct contact with cold plate and mist spray"
+DS18B20 cold-plate probe,4,1-Wire bus,cold-plate measurement and cutoff,"Sketch reads device index 0; verify it is physically attached to Peltier cold plate and not mistaken for chamber air"
+SSD1306 OLED SDA,21,I2C data,display,"I2C address 0x3C in sketch; confirm actual display"
+SSD1306 OLED SCL,22,I2C clock,display,"Shared I2C bus may also be used by optional DS3231 RTC"
+Peltier driver PWM input,25,output PWM,external driver control,"Never connect GPIO directly to Peltier power; verify driver, frequency, current rating, hot-side cooling and safe state"
+Humidifier relay control,26,output digital,external relay/driver control,"Active HIGH in current sketch; verify board polarity and load isolation"
+DS3231 SDA,21,I2C data,optional RTC,"Same I2C bus; optional but recommended for wall-clock schedule"
+DS3231 SCL,22,I2C clock,optional RTC,"Same I2C bus; optional but recommended for wall-clock schedule"
