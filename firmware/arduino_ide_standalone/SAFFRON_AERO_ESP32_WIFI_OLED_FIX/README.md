@@ -17,7 +17,7 @@ It is separate from the main safety-locked PlatformIO implementation in `firmwar
 | Humidifier relay input | GPIO 26, active HIGH by default | Relay/driver control signal, not the humidifier's load supply |
 | Optional RTC | DS3231 on SDA 21 / SCL 22 | Offline wall-clock scheduling when detected |
 
-See [the standalone pin map](../../../../hardware/arduino_ide_standalone_pin_map.csv) and the project-level [hardware and wiring notes](../../../../docs/hardware_and_wiring.md). Confirm the actual board, sensor locations, relay polarity, driver topology, and supply wiring before using hardware outputs.
+See [the standalone pin map](../../../hardware/arduino_ide_standalone_pin_map.csv) and the project-level [hardware and wiring notes](../../../docs/hardware_and_wiring.md). Confirm the actual board, sensor locations, relay polarity, driver topology, and supply wiring before using hardware outputs.
 
 ## Required Arduino libraries
 
