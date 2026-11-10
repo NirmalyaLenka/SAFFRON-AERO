@@ -55,3 +55,14 @@ An ultrasonic mist maker is not necessarily a root-zone aeroponic nozzle. Docume
 ## Driver verification record
 
 Before changing any `*_VERIFIED` constant, record: manufacturer/model, datasheet, logic input voltage/polarity, continuous and peak current, thermal limits, required switching frequency or on/off restrictions, fuse/overcurrent protection, wiring diagram revision, hardware test date, emergency-stop test result and reviewer. The code defaults to “not verified” deliberately.
+
+
+## Standalone Arduino IDE sketch — separate pin map
+
+The table above documents the main `firmware/esp32_controller/` safety-locked PlatformIO build. Do not apply that table to the separate standalone sketch at `firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/`.
+
+The standalone sketch has its own [pin map](../hardware/arduino_ide_standalone_pin_map.csv). Its DHT22 on GPIO 16 supplies the chamber-air temperature/RH reading used by the automatic control loop. Its DS18B20 on GPIO 4 is treated as the Peltier cold-plate probe and is used for the cold-plate cutoff. This is intentionally distinct from chamber temperature.
+
+The standalone implementation uses GPIO 25 as a Peltier driver PWM control and GPIO 26 as a humidifier relay control (active HIGH by default). It does not include the main firmware's compile-time high-current output lockout, and its cold-plate measurement is not a hot-side temperature safety measurement. Confirm the whole external driver/power/cooling arrangement before applying real loads.
+
+The standalone dashboard does not currently show or calculate an achievable chamber temperature. It has no ambient measurement or calibrated thermal model. Its target temperature is an editable request, not a claim about the chamber's minimum achievable temperature.
