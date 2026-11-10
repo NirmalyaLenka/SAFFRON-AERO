@@ -90,3 +90,10 @@ The cited saffron articles are linked directly from `docs/research_and_reference
 ## Gate before enabling real Peltier control
 
 Do not change `PELTIER_DRIVER_VERIFIED`, `COOLANT_PUMP_VERIFIED`, `HOT_SIDE_FAN_VERIFIED`, `FLOW_SENSOR_VERIFIED` or `HOT_SIDE_SENSOR_VERIFIED` merely to bypass the lockout. Identify the physical hardware, establish rated drivers and fuses, fit and test pump/fan/flow/hot-side feedback, map each DS18B20 physical location/address, verify a physical emergency-stop/disconnect and external pull-down-safe driver state, measure current and thermal response with no corms, test flow/thermal faults, and retain dated evidence. The default hardware configuration intentionally keeps output permission blocked.
+
+
+## Additional Arduino IDE standalone sketch (10 November 2026)
+
+The repository now also contains the user-supplied sketch `firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/SAFFRON_AERO_ESP32_WIFI_OLED_FIX.ino`, with its own setup guide and pin map. It is maintained as a separate implementation and was not merged into the safety-locked PlatformIO firmware.
+
+This source distinguishes the DHT22 chamber-air reading from the DS18B20 cold-plate reading. The achievable-chamber-temperature estimator and user interface requested for a later enhancement are **not present** in this sketch. No fresh PlatformIO/Arduino compilation or physical hardware test was performed as part of the GitHub file update; the project maintainer reported the supplied sketch was working on their setup. The new source should therefore be treated as preserved user-supplied firmware, not as newly validated firmware.
