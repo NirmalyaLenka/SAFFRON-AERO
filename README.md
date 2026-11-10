@@ -39,6 +39,8 @@ The ESP32 is the source of truth for saved device configuration and live control
 
 ## Known hardware and assumptions
 
+**Firmware variants:** The main reference firmware is the safety-locked PlatformIO project in `firmware/esp32_controller/`. A separate, user-supplied Arduino IDE sketch is now preserved at `firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/`. These are different implementations with different control and safety behavior; do not mix their pin maps or treat one as a drop-in replacement for the other.
+
 | Item | Project assumption | Status / important limit |
 |---|---|---|
 | Chamber | Approximately 2 ft × 1.5 ft × 1 ft, EPS/thermocol with about 3 cm insulation | Actual internal dimensions and thermal bridges must be measured |
@@ -107,6 +109,20 @@ A banner marks synthetic readings. Phase/profile edits affect only simulator sta
 
 You can omit the Python dashboard entirely and open the ESP32's local fallback page at `http://192.168.4.1` after connecting to its access point. The dashboard is an optional display/client; the firmware loop is local.
 
+## Alternative firmware: Arduino IDE standalone sketch
+
+The separate sketch at [`firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/SAFFRON_AERO_ESP32_WIFI_OLED_FIX.ino`](firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/SAFFRON_AERO_ESP32_WIFI_OLED_FIX.ino) preserves the Wi-Fi/OLED version supplied for the working standalone setup. Follow the dedicated [Arduino IDE README](firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/README.md) for libraries, wiring, network access, and limitations.
+
+Important differences from the main PlatformIO firmware:
+
+- DHT22 on GPIO 16 is the **chamber-air temperature and relative-humidity sensor**. The automatic temperature controller reads this chamber-air measurement.
+- DS18B20 on GPIO 4 is treated as the **Peltier cold-plate probe**. It is used for the cold-plate cutoff, not as chamber temperature.
+- The standalone sketch drives a Peltier driver PWM signal on GPIO 25 and a humidifier relay on GPIO 26. These are driver-control signals, not power outputs; the electrical driver and load must be verified before connection.
+- The standalone sketch does **not** currently calculate, display, or let the user adjust an estimated achievable chamber temperature. It has no ambient-temperature input or calibrated thermal model. Do not mistake the target temperature for an achievable-temperature estimate.
+- The main PlatformIO firmware's default high-current outputs remain disabled until its own commissioning requirements are met. This behavior must not be assumed to apply to the standalone sketch.
+
+The sketch is copied as supplied. This repository update does not claim a fresh firmware compile or physical hardware/safety validation.
+
 ## Build and flash the ESP32 firmware
 
 Install [PlatformIO Core](https://docs.platformio.org/en/latest/core/installation/index.html) or the VS Code PlatformIO extension. Open the folder `firmware/esp32_controller/` as the PlatformIO project. Connect the ESP32 and set the actual serial port in `platformio.ini` or through the IDE's device selection; do not assume `COM14` or any other computer-specific port.
@@ -129,6 +145,8 @@ For a safe development progression: simulation → firmware build → sensor-onl
 ## Repository map
 
 - `firmware/esp32_controller/` — ESP32 Arduino/PlatformIO firmware and configuration.
+- `firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/` — standalone Arduino IDE sketch and setup guide, kept separate from the safety-locked reference firmware.
+- `hardware/arduino_ide_standalone_pin_map.csv` — pin map for the standalone sketch; do not confuse it with the main firmware's `hardware/pin_map.csv`.
 - `dashboard/` — one Flask dashboard with explicit simulator mode, device mode, local charts and CSV export.
 - `docs/saffron_growth_environment.md` — stage-specific research summary and provisional profiles.
 - `docs/problem_solution_report.md` — research and engineering report; see its actual word count and the validation report.
