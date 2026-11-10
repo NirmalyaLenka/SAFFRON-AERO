@@ -9,6 +9,30 @@
 [![Flask](https://img.shields.io/badge/web-Flask-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+## Current Arduino IDE firmware
+
+For the standalone Wi-Fi/OLED build, start here:
+
+- **[Open the Arduino IDE sketch](firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/SAFFRON_AERO_ESP32_WIFI_OLED_FIX.ino)**
+- [Arduino IDE setup, libraries, and dashboard instructions](firmware/arduino_ide_standalone/SAFFRON_AERO_ESP32_WIFI_OLED_FIX/README.md)
+- [Standalone wiring/pin map](hardware/arduino_ide_standalone_pin_map.csv)
+
+This sketch is maintained separately from the safety-locked PlatformIO reference firmware in `firmware/esp32_controller/`. **Do not mix their pin assignments or assume their safety behavior is identical.**
+
+| Measurement / control | Standalone sketch |
+|---|---|
+| **Chamber air temperature + RH** | DHT22 on GPIO 16 — primary temperature feedback for automatic control |
+| **Peltier cold-plate temperature** | DS18B20 on GPIO 4 — separate cold-plate reading/cutoff, not chamber temperature |
+| **Peltier driver control** | PWM signal on GPIO 25; connect only to a verified external driver |
+| **Humidifier relay control** | GPIO 26; verify relay polarity and electrical isolation |
+| **OLED** | SSD1306 I²C, SDA 21 / SCL 22 |
+| **Target chamber temperature** | Editable per phase in the standalone dashboard |
+| **Estimated achievable chamber temperature** | **Not implemented yet.** No calibrated estimate is shown; a target is not proof the chamber can reach it. |
+
+The uploaded standalone sketch is preserved as supplied. It has not been newly compiled or re-tested on physical hardware as part of this repository update. Review the standalone setup guide and safety limitations before connecting high-current loads.
+
+---
+
 > **Safety status:** this is an experimental prototype and software reference implementation, not a certified agricultural appliance. The firmware defaults to disabling real Peltier and misting outputs until the driver topology, pump/fan control, flow switch, hot-side temperature sensor, reservoir switch, wiring, fuses and safety response have been reviewed and explicitly configured. Do not connect a Peltier module to an ESP32 GPIO.
 
 ## What this project investigates
